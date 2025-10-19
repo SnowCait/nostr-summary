@@ -1,6 +1,6 @@
 {
 	"name": "nostr-summary",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"deploy": "wrangler deploy",
@@ -11,5 +11,10 @@
 	"devDependencies": {
 		"typescript": "^5.5.2",
 		"wrangler": "^4.43.0"
+	},
+	"dependencies": {
+		"@octokit/rest": "^22.0.0",
+		"@rx-nostr/crypto": "^0.0.0",
+		"rx-nostr": "^3.6.1"
 	}
 }
