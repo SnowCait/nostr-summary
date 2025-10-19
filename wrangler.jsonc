@@ -4,15 +4,15 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-11",
 	"observability": {
-		"enabled": true
+		"enabled": true,
 	},
 	"triggers": {
-		"crons": ["0 * * * *"]
+		"crons": ["0 * * * *"],
 	},
 	"kv_namespaces": [
 		{
 			"binding": "KV",
-			"id": "%KV_ID%"
-		}
-	]
+			"id": "%KV_ID%",
+		},
+	],
 }
