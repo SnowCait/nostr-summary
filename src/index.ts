@@ -56,5 +56,7 @@ export default {
 			rxNostr.send({ kind: 1, content, tags }).subscribe({ complete: () => resolve() });
 			await promise;
 		}
+
+		rxNostr.dispose();
 	},
 } satisfies ExportedHandler<Env>;
