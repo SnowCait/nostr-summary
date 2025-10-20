@@ -15,4 +15,5 @@
 			"id": "%KV_ID%",
 		},
 	],
+	"keep_vars": true,
 }
