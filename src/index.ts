@@ -15,7 +15,11 @@ export default {
 			return;
 		}
 
-		const rxNostr = createRxNostr({ verifier: noopVerifier, signer: seckeySigner(env.NOSTR_NSEC), authenticator: 'auto' });
+		const rxNostr = createRxNostr({
+			verifier: noopVerifier,
+			signer: seckeySigner(env.NOSTR_NSEC),
+			authenticator: 'auto',
+		});
 		rxNostr.addDefaultRelays(relays);
 
 		const octokit = env.GITHUB_TOKEN ? new Octokit({ auth: env.GITHUB_TOKEN }) : new Octokit();
@@ -52,9 +56,13 @@ export default {
 			const content = `[ ${repository.full_name} ] ${message}\n${commit.data.html_url}`;
 			const tags = [['proxy', commit.data.html_url, 'web']];
 
+			const results = new Map<string, boolean>();
 			const { promise, resolve } = Promise.withResolvers<void>();
-			rxNostr.send({ kind: 1, content, tags }).subscribe({ complete: () => resolve() });
+			rxNostr
+				.send({ kind: 1, content, tags })
+				.subscribe({ next: ({ from, ok }) => results.set(from, ok), complete: () => resolve() });
 			await promise;
+			console.log(`${repository.full_name} (${[...results.values()].filter(Boolean).length}/${results.size})`, results);
 		}
 
 		rxNostr.dispose();

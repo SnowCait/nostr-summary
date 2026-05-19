@@ -2,9 +2,12 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "nostr-summary",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-10-11",
+	"compatibility_date": "2025-10-08",
 	"observability": {
 		"enabled": true,
+		"logs": {
+			"invocation_logs": false,
+		},
 	},
 	"triggers": {
 		"crons": ["0 * * * *"],
