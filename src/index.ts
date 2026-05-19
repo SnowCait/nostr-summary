@@ -15,9 +15,10 @@ export default {
 			return;
 		}
 
+		const signer = seckeySigner(env.NOSTR_NSEC);
 		const rxNostr = createRxNostr({
 			verifier: noopVerifier,
-			signer: seckeySigner(env.NOSTR_NSEC),
+			signer,
 			authenticator: 'auto',
 		});
 		rxNostr.addDefaultRelays(relays);
@@ -55,14 +56,14 @@ export default {
 			const message = commit.data.commit.message.split('\n').slice(0, 10).join('\n');
 			const content = `[ ${repository.full_name} ] ${message}\n${commit.data.html_url}`;
 			const tags = [['proxy', commit.data.html_url, 'web']];
+			const event = await signer.signEvent({ kind: 1, content, tags });
 
 			const results = new Map<string, boolean>();
 			const { promise, resolve } = Promise.withResolvers<void>();
-			rxNostr
-				.send({ kind: 1, content, tags })
-				.subscribe({ next: ({ from, ok }) => results.set(from, ok), complete: () => resolve() });
+			rxNostr.send(event).subscribe({ next: ({ from, ok }) => results.set(from, ok), complete: () => resolve() });
 			await promise;
 			console.log(`${repository.full_name} (${[...results.values()].filter(Boolean).length}/${results.size})`, results);
+			await fetch(env.JAPANESE_RELAY_PROXY, { method: 'PUT', body: JSON.stringify(event) });
 		}
 
 		rxNostr.dispose();
