@@ -63,7 +63,7 @@ export default {
 			rxNostr.send(event).subscribe({ next: ({ from, ok }) => results.set(from, ok), complete: () => resolve() });
 			await promise;
 			console.log(`${repository.full_name} (${[...results.values()].filter(Boolean).length}/${results.size})`, {
-				results,
+				results: Object.fromEntries(results),
 			});
 			await fetch(env.JAPANESE_RELAY_PROXY, { method: 'PUT', body: JSON.stringify(event) });
 		}
